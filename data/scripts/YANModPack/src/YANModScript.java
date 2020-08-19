@@ -24,6 +24,15 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.l2jserver.datapack.ai.npc.AbstractNpcAI;
+import com.l2jserver.gameserver.model.actor.L2Character;
+import com.l2jserver.gameserver.model.actor.L2Npc;
+import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
+import com.l2jserver.gameserver.model.zone.ZoneId;
+import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
+import com.l2jserver.gameserver.taskmanager.AttackStanceTaskManager;
+import com.l2jserver.gameserver.util.Util;
+
 import YANModPack.src.model.entity.ItemRequirement;
 import YANModPack.src.model.entity.YANModProduct;
 import YANModPack.src.model.entity.YANModServer;
@@ -36,15 +45,6 @@ import YANModPack.src.util.htmltmpls.funcs.ForeachFunc;
 import YANModPack.src.util.htmltmpls.funcs.IfChildsFunc;
 import YANModPack.src.util.htmltmpls.funcs.IfFunc;
 import YANModPack.src.util.htmltmpls.funcs.IncludeFunc;
-import ai.npc.AbstractNpcAI;
-
-import com.l2jserver.gameserver.model.actor.L2Character;
-import com.l2jserver.gameserver.model.actor.L2Npc;
-import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
-import com.l2jserver.gameserver.model.zone.ZoneId;
-import com.l2jserver.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2jserver.gameserver.taskmanager.AttackStanceTaskManager;
-import com.l2jserver.gameserver.util.Util;
 
 /**
  * @author HorridoJoho
@@ -81,7 +81,7 @@ public abstract class YANModScript extends AbstractNpcAI
 	
 	private String _generateAdvancedHtml(L2PcInstance player, YANModServer service, String path, Map<String, HTMLTemplatePlaceholder> placeholders)
 	{
-		final String htmlPath = "/data/scripts/" + scriptPath + "/data/html/" + service.htmlFolder + "/" + path;
+		final String htmlPath = "/data/scripts/" + scriptPath + "/data/html/" + service.getHtmlFolder() + "/" + path;
 		debug(player, htmlPath);
 		return HTMLTemplateParser.fromCache(htmlPath, player, placeholders, IncludeFunc.INSTANCE, IfFunc.INSTANCE, ForeachFunc.INSTANCE, ExistsFunc.INSTANCE, IfChildsFunc.INSTANCE, ChildsCountFunc.INSTANCE);
 	}
@@ -116,7 +116,7 @@ public abstract class YANModScript extends AbstractNpcAI
 			{
 				amount = 0L;
 			}
-			items.put(item.getValue().getItem().getId(), amount + item.getValue().itemAmount);
+			items.put(item.getValue().getItem().getId(), amount + item.getValue().getItemAmount());
 		}
 	}
 	
@@ -127,7 +127,7 @@ public abstract class YANModScript extends AbstractNpcAI
 		
 		debug(html);
 		
-		switch (service.dialogType)
+		switch (service.getDialogType())
 		{
 			case NPC:
 				player.sendPacket(new NpcHtmlMessage(npc == null ? 0 : npc.getObjectId(), html));
@@ -137,7 +137,7 @@ public abstract class YANModScript extends AbstractNpcAI
 				break;
 		}
 	}
-	
+
 	@Override
 	public final String onFirstTalk(L2Npc npc, L2PcInstance player)
 	{

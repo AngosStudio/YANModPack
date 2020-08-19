@@ -17,9 +17,7 @@
  */
 package YANModPack.YANTeleporter.src.model.entity;
 
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAttribute;
-
+import YANModPack.YANTeleporter.src.model.TeleporterConfig;
 import YANModPack.src.model.entity.YANModProduct;
 
 /**
@@ -27,20 +25,13 @@ import YANModPack.src.model.entity.YANModProduct;
  */
 public class SoloTeleport extends YANModProduct
 {
-	@XmlAttribute(name = "name", required = true)
-	public final String name;
-	@XmlAttribute(name = "x", required = true)
-	public final int x;
-	@XmlAttribute(name = "y", required = true)
-	public final int y;
-	@XmlAttribute(name = "z", required = true)
-	public final int z;
-	@XmlAttribute(name = "heading", required = true)
-	public final int heading;
-	@XmlAttribute(name = "random_offset")
-	public final int randomOffset;
-	@XmlAttribute(name = "instance")
-	public final String instance;
+	private String name;
+	private int x;
+	private int y;
+	private int z;
+	private int heading;
+	private int randomOffset;
+	private String instance;
 	
 	public SoloTeleport()
 	{
@@ -53,11 +44,38 @@ public class SoloTeleport extends YANModProduct
 		instance = "";
 	}
 	
-	@Override
-	public void afterUnmarshal(Unmarshaller unmarshaller, Object parent)
+	public void afterDeserialize(TeleporterConfig config)
 	{
-		super.afterUnmarshal(unmarshaller, parent);
+		super.afterDeserialize();
 		
 		placeholder.addChild("name", name);
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public int getRandomOffset() {
+		return randomOffset;
+	}
+
+	public int getHeading() {
+		return heading;
+	}
+
+	public String getInstance() {
+		return instance;
+	}
+
+	public int getZ() {
+		return z;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public int getX() {
+		return x;
 	}
 }
